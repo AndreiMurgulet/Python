@@ -38,11 +38,16 @@ class MancalaGame:
             return 7 <= pit_index <= 12
 
     def make_move(self, pit_index):
-        """ Moving seeds"""
-
+        """
+        The implementation for rules:
+        -don't deposit seeds in the enemies mancala
+        -if the last seed is placed in an empty spot on your side you capture the seeds on the opponent side
+        -if the last seed lands in your mancala you get another move
+        """
         if not self.valid_pit_for_current_player(pit_index):
             print("This is not your pit.")
             return False
+
         seeds = self.board[pit_index]
         if seeds == 0:
             print("Empty pit,nothing to move.")
@@ -52,16 +57,53 @@ class MancalaGame:
         current_pos = pit_index
         player_store = self.player_store_index(self.current_player)
         opponent_store = self.opposite_store_index()
+
         while seeds > 0:
             current_pos = (current_pos + 1) % 14
             if current_pos == opponent_store:
                 continue
             self.board[current_pos] += 1
             seeds -= 1
+
+        if current_pos == player_store:
+            print("The last seed landed in your Mancala.You gen another turn.")
+            return True
+
+        if (self.current_player == 1 and current_pos in range(0, 6)) or \
+                (self.current_player == 2 and current_pos in range(7, 13)):
+            if self.board[current_pos] == 1:
+                opposite = 12 - current_pos
+                captured = self.board[opposite]
+                if captured > 0:
+                    self.board[opposite] = 0
+                    self.board[current_pos] = 0
+                    self.board[player_store] += captured + 1
+                    print(f"You got {captured} seeds + 1 from your pit {current_pos}")
+
         self.current_player = self.opposite_player()
 
         return False
 
+    def check_game_end(self):
+        """ Verifies if the end state is achieved"""
+        side1_empty = all(self.board[i] == 0 for i in range(0, 6))
+        side2_empty = all(self.board[i] == 0 for i in range(7, 13))
+
+        return side1_empty or side2_empty
+
+    def winner(self):
+        """
+        Compare the 2 scores and return the winner
+        """
+        store_player1 = self.board[6]
+        store_player2 = self.board[13]
+
+        if store_player1 > store_player2:
+            return 1
+        elif store_player2 > store_player1:
+            return 2
+        else:
+            return 0
 
 
 

@@ -3,6 +3,7 @@ Module Name: ui_welcome.py
 Purpose: this module implements the interface for the Mancala Board
 """
 import tkinter as tk
+import tkinter.messagebox as mb
 
 from mancala_logic import MancalaGame
 
@@ -145,11 +146,22 @@ class MancalaBoard:
             )
 
     def handle_pit_click(self, pit_index):
-
+        """Makes the moves+checks the game state"""
         extra_turn = self.game.make_move(pit_index)
         self.draw_seeds()
+        if self.game.check_game_end():
+            self.end_game()
+            return
 
-
+    def end_game(self):
+        w = self.game.winner()
+        if w == 1:
+            msg = f"Player 1 wins! Score= {self.game.board[6]} vs {self.game.board[13]}"
+        elif w == 2:
+            msg = f"Player 2 wins! Score= {self.game.board[13]} vs {self.game.board[6]}"
+        else:
+            msg = f"Tie! {self.game.board[6]} vs {self.game.board[13]}"
+        mb.showinfo("Game Over", msg)
 
 
 
