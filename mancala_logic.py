@@ -23,8 +23,15 @@ class MancalaGame:
         """Remember the player's turn"""
         return 2 if self.current_player == 1 else 1
 
+    def player_store_index(self, player):
+        """Assign a mancala space to store points"""
+        return 6 if player == 1 else 13
+
+    def opposite_store_index(self):
+        return self.player_store_index(self.opposite_player())
+
     def valid_pit_for_current_player(self, pit_index):
-        """Check if it is your mancala"""
+        """Check if it is your pit"""
         if self.current_player == 1:
             return 0 <= pit_index <= 5
         else:
@@ -36,17 +43,22 @@ class MancalaGame:
         if not self.valid_pit_for_current_player(pit_index):
             print("This is not your pit.")
             return False
-
         seeds = self.board[pit_index]
+        if seeds == 0:
+            print("Empty pit,nothing to move.")
+            return False
 
-        self.board[pit_index] = 0
         self.board[pit_index] = 0
         current_pos = pit_index
-        self.current_player = self.opposite_player()
+        player_store = self.player_store_index(self.current_player)
+        opponent_store = self.opposite_store_index()
         while seeds > 0:
             current_pos = (current_pos + 1) % 14
+            if current_pos == opponent_store:
+                continue
             self.board[current_pos] += 1
             seeds -= 1
+        self.current_player = self.opposite_player()
 
         return False
 

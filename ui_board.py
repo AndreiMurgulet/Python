@@ -49,7 +49,6 @@ class MancalaBoard:
         )
 
         self.pit_positions = self.calculate_pit_positions()
-
         self.pit_ids = [None] * 14
         self.draw_pits()
         self.draw_seeds()
@@ -73,7 +72,7 @@ class MancalaBoard:
         return positions
 
     def draw_pits(self):
-        """Drawing the pits"""
+        """Drawing the  12 pits"""
         radius = 40
         for i in range(14):
             if i in (6, 13):
@@ -94,6 +93,17 @@ class MancalaBoard:
         for pit_index, count in enumerate(self.game.board):
             if count <= 0:
                 continue
+
+            if pit_index == 6:
+                left, right = self.canvas_width - 80, self.canvas_width - 10
+                top, bottom = 90, 320
+                self.draw_store_seeds(6, count, left, right, top, bottom)
+
+            elif pit_index == 13:
+                left, right = 10, 80
+                top, bottom = 80, 320
+                self.draw_store_seeds(13, count, left, right, top, bottom)
+
             else:
                 x_center, y_center = self.pit_positions[pit_index]
                 self.draw_pit_seeds(pit_index, x_center, y_center, count)
@@ -110,6 +120,27 @@ class MancalaBoard:
             py = y_center - offset + row * spacing
             self.canvas.create_oval(
                 px, py, px + 8, py + 8,
+                fill="black", outline="white", tags="seed"
+            )
+
+    def draw_store_seeds(self, pit_index, count, left, right, top, bottom):
+        """Drawing the seeds in the player's storage"""
+        height = bottom - top
+        width = right - left
+
+        cols = 3
+        rows = 10
+        spacing_x = (width - 20) // (cols + 1)
+        spacing_y = (height - 20) // (rows + 1)
+
+        for i in range(count):
+            row = i // cols
+            col = i % cols
+            px = (left + 25) + col * spacing_x
+            py = (top + 10) + row * spacing_y
+
+            self.canvas.create_oval(
+                px - 4, py - 4, px + 4, py + 4,
                 fill="black", outline="white", tags="seed"
             )
 
