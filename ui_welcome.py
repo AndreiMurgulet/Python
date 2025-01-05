@@ -6,14 +6,14 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from PIL.Image import Resampling
 
+from ui_board import MancalaBoard
+
 
 class MancalaWelcome:
-    """
-    Class to initialize the welcome interface and start button
-    """
+    """Class to initialize the welcome interface and start button"""
 
     def __init__(self, root, opponent_type="human"):
-        """Initialize the game state and start button  """
+        """Initialize the game state and start button"""
         self.root = root
         self.root.title("Mancala - Ecran Bun Venit")
         self.opponent_type = opponent_type
@@ -39,3 +39,4 @@ class MancalaWelcome:
     def start_game(self):
         """Begin the game"""
         self.canvas.destroy()
+        MancalaBoard(self.root, self.opponent_type)
