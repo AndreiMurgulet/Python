@@ -2,6 +2,7 @@
 Module Name: ui_welcome.py
 Purpose: this module implements the interface for the Mancala Board
 """
+import random
 import tkinter as tk
 import tkinter.messagebox as mb
 
@@ -152,6 +153,25 @@ class MancalaBoard:
         if self.game.check_game_end():
             self.end_game()
             return
+        if not extra_turn and self.opponent_type == "computer" and self.game.current_player == 2:
+            self.root.after(200, self.computer_move)
+
+    def computer_move(self):
+        valid_pits = [i for i in range(7, 13) if self.game.board[i] > 0]
+        if not valid_pits:
+            if self.game.check_game_end():
+                self.end_game()
+            return
+        pit_chosen = random.choice(valid_pits)
+        extra_turn = self.game.make_move(pit_chosen)
+        self.draw_seeds()
+
+        if self.game.check_game_end():
+            self.end_game()
+            return
+
+        if extra_turn and self.game.current_player == 2:
+            self.root.after(500, self.computer_move)
 
     def end_game(self):
         w = self.game.winner()
@@ -162,8 +182,3 @@ class MancalaBoard:
         else:
             msg = f"Tie! {self.game.board[6]} vs {self.game.board[13]}"
         mb.showinfo("Game Over", msg)
-
-
-
-
-
