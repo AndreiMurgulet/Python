@@ -17,7 +17,7 @@ def main():
     root = tk.Tk()
     root.title("Mancala - Main")
 
-    welcome_screen = MancalaWelcome(root, opponent_type)
+    MancalaWelcome(root, opponent_type)
     root.mainloop()
 
 

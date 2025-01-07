@@ -49,7 +49,7 @@ class MancalaGame:
         """
         Find if you can deposit in that store
         Returns:
-            -integer: the index of the player's opposite store'
+            -integer: the index of the player's opposite store
         """
         return self.player_store_index(self.opposite_player())
 
@@ -69,7 +69,7 @@ class MancalaGame:
     def make_move(self, pit_index):
         """
         The implementation for rules:
-            -don't deposit seeds in the enemies mancala
+            -do not deposit seeds in the enemies mancala
             -if the last seed is placed in an empty spot on your side you capture the seeds on the opponent side
             -if the last seed lands in your mancala you get another move
 

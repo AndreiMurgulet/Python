@@ -18,10 +18,10 @@ class MancalaWelcome:
 
         Parameters:
             -opponent_type (str): the type of opponent human or computer
-            
+
         """
         self.root = root
-        self.root.title("Mancala - Ecran Bun Venit")
+        self.root.title("Mancala - Welcome Screen")
         self.opponent_type = opponent_type
 
         self.canvas_width = 900
@@ -36,8 +36,8 @@ class MancalaWelcome:
 
         self.canvas.create_image(0, 0, image=self.bg_image_tk, anchor='nw')
 
-        self.label = tk.Label(root, text="Welcome to the Game of Mancala!", font=("Calibri", 16))
-        self.start_button = tk.Button(root, text="Start Game", font=("Calibri", 14), command=self.start_game)
+        self.label = tk.Label(root, text="Welcome to the Game of Mancala!", font=("Calibre", 16))
+        self.start_button = tk.Button(root, text="Start Game", font=("Calibre", 14), command=self.start_game)
 
         self.canvas.create_window(self.canvas_width / 2, 50, anchor="n", window=self.label)
         self.canvas.create_window(self.canvas_width / 2, 160, anchor="n", window=self.start_button)
