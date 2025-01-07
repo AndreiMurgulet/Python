@@ -13,25 +13,54 @@ class MancalaGame:
         self.current_player = 1
 
     def player_side_range(self, player):
-        """Check what player is moving and from what pots """
+        """
+        Check what player is moving and from what pots
+
+        Parameters:
+            -player (int) : the player number (1 for bottom 2 for top)
+
+        Returns:
+            -range: a range of numbers to show what pits belong to a player
+         """
         if player == 1:
             return range(0, 6)
         else:
             return range(7, 13)
 
     def opposite_player(self):
-        """Remember the player's turn"""
+        """
+        Remember the player's turn
+        Returns:
+            -integer to know the opposite player index
+        """
         return 2 if self.current_player == 1 else 1
 
     def player_store_index(self, player):
-        """Assign a mancala space to store points"""
+        """Assign a mancala space to store points
+        Parameters:
+            -player (int) : which player is moving to remember receives seeds
+
+        Returns:
+            -integer: the index of the player's mancala space
+        """
         return 6 if player == 1 else 13
 
     def opposite_store_index(self):
+        """
+        Find if you can deposit in that store
+        Returns:
+            -integer: the index of the player's opposite store'
+        """
         return self.player_store_index(self.opposite_player())
 
     def valid_pit_for_current_player(self, pit_index):
-        """Check if it is your pit"""
+        """
+        Check if it is your pit
+        Parameters:
+            -pit_index (int) : which player is moving to know what pits you can press
+        Returns:
+            -boolean: True if it is your pit, False otherwise
+        """
         if self.current_player == 1:
             return 0 <= pit_index <= 5
         else:
@@ -40,10 +69,17 @@ class MancalaGame:
     def make_move(self, pit_index):
         """
         The implementation for rules:
-        -don't deposit seeds in the enemies mancala
-        -if the last seed is placed in an empty spot on your side you capture the seeds on the opponent side
-        -if the last seed lands in your mancala you get another move
+            -don't deposit seeds in the enemies mancala
+            -if the last seed is placed in an empty spot on your side you capture the seeds on the opponent side
+            -if the last seed lands in your mancala you get another move
+
+        Parameters:
+            -pit_index (int) : the index for each pit
+
+        Returns:
+            -boolean: True if you can make another move, False otherwise
         """
+
         if not self.valid_pit_for_current_player(pit_index):
             print("This is not your pit.")
             return False
@@ -85,7 +121,11 @@ class MancalaGame:
         return False
 
     def check_game_end(self):
-        """ Verifies if the end state is achieved"""
+        """
+        Verifies if the end state is achieved
+        Returns:
+            -boolean: True if the end state is achieved, False otherwise
+        """
         side1_empty = all(self.board[i] == 0 for i in range(0, 6))
         side2_empty = all(self.board[i] == 0 for i in range(7, 13))
 
@@ -94,6 +134,8 @@ class MancalaGame:
     def winner(self):
         """
         Compare the 2 scores and return the winner
+        Returns:
+            -integer: the winner
         """
         store_player1 = self.board[6]
         store_player2 = self.board[13]
@@ -104,7 +146,3 @@ class MancalaGame:
             return 2
         else:
             return 0
-
-
-
-

@@ -13,7 +13,12 @@ class MancalaBoard:
     """Class to initialize the board interface with the pits and seeds"""
 
     def __init__(self, root, opponent_type="human"):
-        """Set up the table and the player type"""
+        """
+        Set up the table and the player type
+
+        Parameters:
+            -opponent_type (string): the type of opponent to play
+        """
         self.root = root
         self.opponent_type = opponent_type
         self.root.title(f"Mancala vs {('Computer' if opponent_type == 'computer' else 'Player')}")
@@ -54,9 +59,14 @@ class MancalaBoard:
         self.pit_ids = [None] * 14
         self.draw_pits()
         self.draw_seeds()
+        self.highlight_pits()
 
     def calculate_pit_positions(self):
-        """Setting the holding pots for each player"""
+        """
+        Setting the holding pots for each player
+        Returns:
+            - list of positions of each pit
+        """
         positions = [None] * 14
         start_x = 200
         spacing = 100
@@ -83,7 +93,7 @@ class MancalaBoard:
             pit_id = self.canvas.create_oval(
                 x - radius, y - radius,
                 x + radius, y + radius,
-                fill="burlywood", outline="black", width=2
+                fill="lightgray", outline="black", width=2
             )
             self.pit_ids[i] = pit_id
 
@@ -111,7 +121,14 @@ class MancalaBoard:
                 self.draw_pit_seeds(pit_index, x_center, y_center, count)
 
     def draw_pit_seeds(self, pit_index, x_center, y_center, count):
-        """drawing the pit seeds"""
+        """
+        drawing the pit seeds
+        Parameters:
+            - pit_index (int): the index of what the pit in which you need to draw
+            - x_center (int): the x coordinate of the center of the pit seed
+            - y_center (int): the y coordinate of the center of the pit seed
+            - count (int): the count of seeds
+        """
         spacing = 10
         cols = 5
         offset = 18
@@ -126,7 +143,16 @@ class MancalaBoard:
             )
 
     def draw_store_seeds(self, pit_index, count, left, right, top, bottom):
-        """Drawing the seeds in the player's storage"""
+        """
+        Drawing the seeds in the player's storage
+        Parameters:
+            - pit_index (int): the index of what the pit in which you need to draw
+            - count (int): the count of seeds
+            - left (int): the x coordinate of the left side of the seed
+            - right (int): the x coordinate of the right side of the seed
+            - top (int): the y coordinate of the top side of the seed
+            - bottom (int): the y coordinate of the bottom side of the seed
+        """
         height = bottom - top
         width = right - left
 
@@ -147,16 +173,22 @@ class MancalaBoard:
             )
 
     def handle_pit_click(self, pit_index):
-        """Makes the moves+checks the game state"""
+        """
+        Makes the moves+checks the game state
+        Parameters:
+            - pit_index (int): the index of what the pit in which you need to draw
+        """
         extra_turn = self.game.make_move(pit_index)
         self.draw_seeds()
         if self.game.check_game_end():
             self.end_game()
             return
+        self.highlight_pits()
         if not extra_turn and self.opponent_type == "computer" and self.game.current_player == 2:
-            self.root.after(200, self.computer_move)
+            self.root.after(1000, self.computer_move)
 
     def computer_move(self):
+        """The computer chooses the next move."""
         valid_pits = [i for i in range(7, 13) if self.game.board[i] > 0]
         if not valid_pits:
             if self.game.check_game_end():
@@ -169,11 +201,28 @@ class MancalaBoard:
         if self.game.check_game_end():
             self.end_game()
             return
+        self.highlight_pits()
 
         if extra_turn and self.game.current_player == 2:
-            self.root.after(500, self.computer_move)
+            self.root.after(1000, self.computer_move)
+
+    def highlight_pits(self):
+        """Highlights what pits you can pick"""
+        for i in range(14):
+            if i == 6 or i == 13:
+                continue
+            self.canvas.itemconfig(self.pit_ids[i], outline="black", width=2)
+
+        if self.game.current_player == 1:
+            pits_highlight = range(0, 6)
+        else:
+            pits_highlight = range(7, 13)
+
+        for i in pits_highlight:
+            self.canvas.itemconfig(self.pit_ids[i], outline="gold", width=4)
 
     def end_game(self):
+        """ Display's the winner"""
         w = self.game.winner()
         if w == 1:
             msg = f"Player 1 wins! Score= {self.game.board[6]} vs {self.game.board[13]}"

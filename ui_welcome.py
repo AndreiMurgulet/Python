@@ -13,7 +13,13 @@ class MancalaWelcome:
     """Class to initialize the welcome interface and start button"""
 
     def __init__(self, root, opponent_type="human"):
-        """Initialize the game state and start button"""
+        """
+        Initialize the game state and start button
+
+        Parameters:
+            -opponent_type (str): the type of opponent human or computer
+            
+        """
         self.root = root
         self.root.title("Mancala - Ecran Bun Venit")
         self.opponent_type = opponent_type
